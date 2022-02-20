@@ -1,0 +1,22 @@
+
+config wifi-device 'radio0'
+	option type 'mac80211'
+	option path 'pci0000:00/0000:00:1c.3/0000:06:00.0'
+	option country 'US'
+	option htmode 'HT40'
+	option legacy_rates '1'
+	option disabled '0'
+	option channel '6'
+	option hwmode '11g'
+	option band '2g'
+	option mu_beamformer '0'
+
+config wifi-iface
+	option network 'wwan'
+	option ssid 'YTBS'
+	option encryption 'psk2'
+	option device 'radio0'
+	option mode 'sta'
+	option bssid '50:DA:00:A3:D1:50'
+	option key 'zysybs4819155'
+
