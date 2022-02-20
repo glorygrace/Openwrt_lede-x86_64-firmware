@@ -57,7 +57,7 @@ jobs:
       run: |
         cd openwrt
         echo "FILE_NAME=myOpenWrt_$(date +"%Y%m%d%H%M").zip" >> $GITHUB_ENV
-        zip ${FILE_NAME} *
+        zip ${{ env.FILE_NAME }} *
         #zip myOpenWrt.zip *
         echo "::set-output name=status::success"
         
@@ -67,7 +67,7 @@ jobs:
       run: |
         cd openwrt
         curl -fsSL git.io/file-transfer | sh
-        ./transfer wet -s -p 16 --no-progress ${FILE_NAME} | tee wetransfer.log
+        ./transfer wet -s -p 16 --no-progress ${{ env.FILE_NAME }} | tee wetransfer.log
         #./transfer wet -s -p 16 --no-progress myOpenWrt.zip | tee wetransfer.log
         echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
         echo "::set-output name=url::$(cat wetransfer.log | grep https | cut -f3 -d" ")"
