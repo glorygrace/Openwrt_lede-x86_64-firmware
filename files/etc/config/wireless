@@ -11,12 +11,3 @@ config wifi-device 'radio0'
 	option band '2g'
 	option mu_beamformer '0'
 
-config wifi-iface
-	option network 'wwan'
-	option ssid 'YTBS'
-	option encryption 'psk2'
-	option device 'radio0'
-	option mode 'sta'
-	option bssid '50:DA:00:A3:D1:50'
-	option key 'zysybs4819155'
-
