@@ -56,8 +56,10 @@ jobs:
       id: organize
       run: |
         cd openwrt
-        echo "FILE_NAME=myOpenWrt_$(date +"%Y%m%d%H%M").zip" >> $GITHUB_ENV
-        tar -zcvf ${{ env.FILE_NAME }}.tar.gz *
+        #echo "FILE_NAME=myOpenWrt_$(date +"%Y%m%d%H%M").zip" >> $GITHUB_ENV
+        t=myOpenWrt_$(date +%Y%m%d%H%M%S).tar.gz
+        echo "FILE_NAME=$t" >> $GITHUB_ENV
+        tar -zcvf $t *
         #zip myOpenWrt.zip *
         echo "::set-output name=status::success"
         
