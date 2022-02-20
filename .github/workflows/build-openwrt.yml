@@ -143,6 +143,7 @@ jobs:
       id: wetransfer
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_WETRANSFER == 'true' && !cancelled()
       run: |
+        cd openwrt/bin
         curl -fsSL git.io/file-transfer | sh
         ./transfer wet -s -p 16 --no-progress ${{ env.FILE_NAME }} | tee wetransfer.log
         echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
