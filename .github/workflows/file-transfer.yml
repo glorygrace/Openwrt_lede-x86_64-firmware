@@ -52,19 +52,20 @@ jobs:
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         
+    - name: Organize files
+      id: organize
+      run: |
+        cd openwrt
+        zip mydir.zip *
+        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+        echo "::set-output name=status::success"
+        
     - name: Upload bin directory
       uses: actions/upload-artifact@main
       with:
         name: OpenWrt
-        path: openwrt/tools        
-
-    - name: Organize files
-      id: organize
-      run: |
-        cd openwrt/tools
-        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
-        echo "::set-output name=status::success"
-
+        path: openwrt/mydir.zip
+        
     - name: Upload firmware to cowtransfer
       id: cowtransfer
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_COWTRANSFER == 'true' && !cancelled()
@@ -78,8 +79,9 @@ jobs:
       id: wetransfer
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_WETRANSFER == 'true' && !cancelled()
       run: |
+        cd openwrt
         curl -fsSL git.io/file-transfer | sh
-        ./transfer wet -s -p 16 --no-progress ${FIRMWARE} | tee wetransfer.log
+        ./transfer wet -s -p 16 --no-progress mydir.zip | tee wetransfer.log
         echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
         echo "::set-output name=url::$(cat wetransfer.log | grep https | cut -f3 -d" ")"
 
