@@ -51,6 +51,12 @@ jobs:
         df -hT $PWD
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+        
+    - name: Upload bin directory
+      uses: actions/upload-artifact@main
+      with:
+        name: OpenWrt
+        path: openwrt        
 
     - name: Organize files
       id: organize
