@@ -56,12 +56,12 @@ jobs:
       uses: actions/upload-artifact@main
       with:
         name: OpenWrt
-        path: openwrt        
+        path: openwrt/tools        
 
     - name: Organize files
       id: organize
       run: |
-        cd openwrt
+        cd openwrt/tools
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "::set-output name=status::success"
 
