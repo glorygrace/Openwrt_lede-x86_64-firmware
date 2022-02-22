@@ -1,0 +1,30 @@
+# This file is interpreted as shell script.
+# Put your custom iptables rules here, they will
+# be executed with each firewall (re-)start.
+
+# Internal uci firewall chains are flushed and recreated on reload, so
+# put custom rules into the root chains e.g. INPUT or FORWARD or into the
+# special user chains, e.g. input_wan_rule or postrouting_lan_rule.
+
+# 挟持端口53流量到站内（去除#启用,如在adguardhome开启了模式2、3、4勿启用以免产生冲突）
+# iptables -t nat -A PREROUTING -p udp --dport 53 -j REDIRECT --to-ports 53
+# iptables -t nat -A PREROUTING -p tcp --dport 53 -j REDIRECT --to-ports 53
+
+# 屏蔽外网IPV6连接内网samba
+ip6tables -I INPUT  -p tcp -m multiport --dport 137,138,139,445 -j DROP
+ip6tables -I OUTPUT -p tcp -m multiport --sport 137,138,139,445 -j DROP
+
+# 示例：屏蔽54端口入口（去除#启用）
+# iptables -I INPUT -p tcp --dport 54 -j DROP
+# iptables -I INPUT -p udp --dport 54 -j DROP
+
+# 示例：MAC/IP（去除#启用）
+# iptables -I FORWARD -s 192.168.18.225 -m mac ! --mac-source 00:02:03:04:05:06 -j DROP
+
+# 示例：TTL+1（去除#启用,eth1为WAN,否则需修改如wlan0等）
+# iptables -t mangle -A PREROUTING -i eth1 -j TTL --ttl-inc 1
+
+#iptables -t nat -I POSTROUNTING -j MASQUERADE
+
+#iptables -t nat -A POSTROUTING -j SNAT --to 192.168.0.168
+
