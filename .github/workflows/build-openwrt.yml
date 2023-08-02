@@ -29,7 +29,8 @@ env:
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_COWTRANSFER: false
-  UPLOAD_WETRANSFER: true
+  UPLOAD_WETRANSFER: false
+  UPLOAD_WENSHUSHU: true
   UPLOAD_RELEASE: false
   TZ: Asia/Shanghai
 
@@ -148,6 +149,17 @@ jobs:
         ./transfer wet -s -p 16 --no-progress ${{ env.FILE_NAME }} | tee wetransfer.log
         echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
         echo "::set-output name=url::$(cat wetransfer.log | grep https | cut -f3 -d" ")"
+
+    - name: Upload firmware to WenShuShu
+      id: WenShuShu
+      if: steps.organize.outputs.status == 'success' && env.UPLOAD_WENSHUSHU == 'true' && !cancelled()
+      run: |
+        cd openwrt/bin
+        curl -fsSL git.io/file-transfer | sh
+        ./transfer wss -s -p 16 --no-progress ${{ env.FILE_NAME }} | tee wenshushu.log
+        echo "::warning file=wenshushu.cn::$(cat wenshushu.log | grep https)" 
+        echo "::set-output name=url::$(cat wenshushu.log | grep https | cut -f3 -d" ")"
+
 
     - name: Generate release tag
       id: tag
